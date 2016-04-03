@@ -25,6 +25,10 @@
 
 (def probability prior)
 
+(defn priors [suite]
+  "Return a PMF of all priors for suite."
+  (zipmap (hypotheses suite) (map (partial prior suite) (hypotheses suite))))
+
 (defn likelihood [suite data hypothesis]
   "Calculate the likelihood of data given hypothesis in suite."
   ((:likelihood suite) data hypothesis))
@@ -39,3 +43,11 @@
         (make-suite)
         (add-prior (zipmap (hypotheses suite) normalized-posteriors))
         (add-likelihood (:likelihood suite)))))
+
+(defn posterior-seq [suite data]
+  (lazy-seq
+   (if (seq data)
+     (cons (posterior suite (first data))
+           (posterior-seq (posterior suite (first data)) (rest data)))
+     [])))
+
