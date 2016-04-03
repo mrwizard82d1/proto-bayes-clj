@@ -31,7 +31,7 @@
 
 (defn posterior [suite data]
   "Calculates the posterior probabilities of seeing data in a suite."
-  (let [unnormalized-posteriors (map #(* (prior suite %1) (likelihood suite :vanilla %1))
+  (let [unnormalized-posteriors (map #(* (prior suite %1) (likelihood suite data %1))
                                      (hypotheses suite))
         total-probability (reduce + unnormalized-posteriors)
         normalized-posteriors (map #(/ % total-probability) unnormalized-posteriors)]
